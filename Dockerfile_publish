@@ -1,5 +1,6 @@
 FROM ubuntu:14.04
 
+# copy application into container
 COPY ./app /
 
 CMD ["/app"]
