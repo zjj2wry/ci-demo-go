@@ -1,0 +1,32 @@
+integration:
+  services:
+    mongo:
+      image: mongo:3.0.5
+      command: mongod --smallfiles
+  image: golang:1.6
+  environment:
+    - BUILD_DIR=/go/src/github.com/caicloud/ci-demo-go
+  commands: 
+    - mkdir -p $BUILD_DIR
+    - cp ./ -rf $BUILD_DIR
+    - cd $BUILD_DIR
+    - go build -v ./app
+    - $BUILD_DIR/app/app &
+    - echo "do some test"
+
+pre_build:
+  image: index.caicloud.io/caicloud/golang:1.6
+  volumes:
+    - .:/go/src/github.com/caicloud/ci-demo-go
+  commands:
+    - cd /go/src/github.com/caicloud/ci-demo-go/app
+    - go build -v .
+  outputs:
+    - /go/src/github.com/caicloud/ci-demo-go/app/app
+
+build:
+  dockerfile_name: Dockerfile_publish
+
+post_build:
+  commands:
+    - echo "do some related operations after the images published"
