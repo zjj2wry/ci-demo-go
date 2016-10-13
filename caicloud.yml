@@ -9,9 +9,9 @@ integration:
   commands: 
     - mkdir -p $BUILD_DIR
     - cp ./ -rf $BUILD_DIR
-    - cd $BUILD_DIR/app
-    - go build -v .
-    - $BUILD_DIR/app/app &
+    - cd $BUILD_DIR/code
+    - go build -v -o app
+    - $BUILD_DIR/code/app &
     - echo "do some test"
 
 pre_build:
@@ -19,5 +19,11 @@ pre_build:
   volumes:
     - .:/go/src/github.com/caicloud/ci-demo-go
   commands:
-    - cd /go/src/github.com/caicloud/ci-demo-go/app
-    - go build -v .
+    - echo "compile executable files"
+    - cd /go/src/github.com/caicloud/ci-demo-go/code
+    - go build -v -o app
+  outputs:
+    - /go/src/github.com/caicloud/ci-demo-go/code/app
+
+build:
+  dockerfile_name: Dockerfile_publish
